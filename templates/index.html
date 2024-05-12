@@ -1,0 +1,29 @@
+<main>
+  <div class="card">
+    <h2>Blog</h2>
+
+    <br />
+
+    <a href="/blog">Lees meer...</a>
+  </div>
+
+  <div class="card">
+    <h2>Bakken scoreboard</h2>
+    <div class="scoreboard">
+      {{ range .Bakken }}
+      <div class="bak-row">
+        {{ .PlayerName }}:
+        {{ .Amount }}
+      </div>
+      {{ end }}
+    </div>
+
+    <br />
+
+    <a href="/bakken">Waarom nou weer?</a>
+  </div>
+
+  <div class="ice" onclick="iceFound()">
+    <img src="/static/ice.webp" width="64px" height="64px">
+  </div>
+</main>

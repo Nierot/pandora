@@ -1,0 +1,20 @@
+<main>
+  <table class="bakken-table">
+    <thead>
+      <tr>
+        <th>Speler</th>
+        <th>Reden</th>
+        <th>Wanneer</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{ range .Bakken }}
+      <tr>
+        <td>{{ .PlayerName }}</td>
+        <td>{{ .Reason }}</td>
+        <td>{{ .CreatedAt }}</td>
+      </tr>
+      {{ end }}
+    </tbody>
+  </table>
+</main>
