@@ -9,12 +9,15 @@ func InitPublic(app *fiber.App) {
 	app.Get("/", func(c *fiber.Ctx) error {
 		bakken, err := models.GetAmountOfBakkenPerPlayer()
 
+		blog := models.GetLatestBlogEntry()
+
 		if err != nil {
 			return c.Status(500).SendString(err.Error())
 		}
 
 		return c.Render("index", fiber.Map{
 			"Bakken": bakken,
+			"Blog": &blog,
 		}, "layouts/base")
 	})
 

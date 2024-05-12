@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
@@ -9,7 +11,8 @@ import (
 const playerSchema = `
 CREATE TABLE IF NOT EXISTS players (
 	id INT AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(50) NOT NULL
+	name VARCHAR(50) NOT NULL,
+	is_pirate BOOL DEFAULT(false)
 );`
 
 const bakkenSchema = `
@@ -20,6 +23,18 @@ CREATE TABLE IF NOT EXISTS bakken (
 	player_id INT NOT NULL,
 	FOREIGN KEY (player_id) REFERENCES players(id)
 );`
+
+const blogSchema = `
+CREATE TABLE IF NOT EXISTS blog (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	title VARCHAR(100) NOT NULL,
+	content TEXT NOT NULL,
+	image TEXT,
+	writer_id INT NOT NULL,
+	FOREIGN KEY (writer_id) REFERENCES players(id)
+);`
+
 
 var DB *sqlx.DB
 
@@ -38,6 +53,7 @@ func InitDB() {
 
 	db.MustExec(playerSchema)
 	db.MustExec(bakkenSchema)
+	db.MustExec(blogSchema)
 
 	DB = db
 }
@@ -45,11 +61,12 @@ func InitDB() {
 type BakkenPerPlayer struct {
 	PlayerName string `json:"player_name"`
 	Amount     int    `json:"amount"`
+	IsPirate   bool   `json:"is_pirate"`
 }
 
 func GetAmountOfBakkenPerPlayer() ([]BakkenPerPlayer, error) {
 	query := `
-		SELECT player.name, COUNT(bakken.id) as amount
+		SELECT player.name, player.is_pirate, COUNT(bakken.id) as amount
 		FROM players as player
 		LEFT JOIN bakken as bakken
 		ON player.id = bakken.player_id
@@ -69,7 +86,7 @@ func GetAmountOfBakkenPerPlayer() ([]BakkenPerPlayer, error) {
 		var player Player
 		var amount int
 
-		err = rows.Scan(&player.Name, &amount)
+		err = rows.Scan(&player.Name, &player.IsPirate, &amount)
 
 		if err != nil {
 			return nil, err
@@ -77,6 +94,7 @@ func GetAmountOfBakkenPerPlayer() ([]BakkenPerPlayer, error) {
 
 		amounts = append(amounts, BakkenPerPlayer{
 			PlayerName: player.Name,
+			IsPirate: player.IsPirate,
 			Amount:     amount,
 		})
 	}
@@ -126,9 +144,20 @@ func GetBakken() ([]BakWithPlayerName, error) {
 	return bakken, nil
 }
 
+func GetLatestBlogEntry() *BlogEntry {
+	blog := BlogEntry{}
+
+	DB.Select(&blog, "SELECT * FROM blog LIMIT 1")
+
+	fmt.Println(blog)
+
+	return &blog
+}
+
 type Player struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
+	IsPirate bool `json:"is_pirate"`
 }
 
 type Bakken struct {
@@ -136,4 +165,13 @@ type Bakken struct {
 	CreatedAt string `db:"created_at"`
 	Reason    string `db:"reason"`
 	PlayerID  int    `db:"player_id"`
+}
+
+type BlogEntry struct {
+	ID int `db:"id"`
+	CreatedAt string `db:"created_at"`
+	Title string `db:"title"`
+	Content string `db:"content"`
+	Image string `db:"image"`
+	WriterID int `db:"writer_id"`
 }

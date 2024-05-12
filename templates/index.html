@@ -2,6 +2,8 @@
   <div class="card">
     <h2>Blog</h2>
 
+    {{ .Blog }}
+
     <br />
 
     <a href="/blog">Lees meer...</a>
@@ -9,11 +11,15 @@
 
   <div class="card">
     <h2>Bakken scoreboard</h2>
+    <div class="icon" onclick="bakkenAlert()">?</div>
     <div class="scoreboard">
       {{ range .Bakken }}
       <div class="bak-row">
         {{ .PlayerName }}:
         {{ .Amount }}
+        {{if not .IsPirate }}
+        *
+        {{end}}
       </div>
       {{ end }}
     </div>

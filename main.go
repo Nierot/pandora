@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/basicauth"
 	"github.com/gofiber/template/html/v2"
 	"github.com/nierot/pandora/models"
 	"github.com/nierot/pandora/routes"
@@ -26,7 +25,7 @@ func main() {
 	models.InitDB()
 	
 	routes.InitPublic(app)
-	auth(app)
+	routes.InitAuth(app)
 	routes.InitProtected(app)
 	
 	app.Listen(":3000")
@@ -48,16 +47,5 @@ func config() {
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
 	}
-}
-
-func auth(app *fiber.App) {
-	username := viper.GetString("AUTH_USERNAME")
-	password := viper.GetString("AUTH_PASSWORD")
-
-	app.Use(basicauth.New(basicauth.Config{
-		Users: map[string]string{
-				username: password,
-		},
-	}))
 }
 
