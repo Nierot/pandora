@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -144,20 +145,90 @@ func GetBakken() ([]BakWithPlayerName, error) {
 	return bakken, nil
 }
 
-func GetLatestBlogEntry() *BlogEntry {
-	blog := BlogEntry{}
+func GetLatestBlogEntry() (*BlogEntryWithName, error) {
+	query := `
+		SELECT blog.*, players.name as writer_name
+		FROM blog
+		JOIN players
+		ON blog.writer_id = players.id
+		LIMIT 1;
+	`
+	
+	blog := BlogEntryWithName{}
 
-	DB.Select(&blog, "SELECT * FROM blog LIMIT 1")
+	err := DB.Get(&blog, query)
+
+	if err != nil {
+		return nil, err
+	}
 
 	fmt.Println(blog)
 
-	return &blog
+	return &blog, nil
+}
+
+func GetBlogEntry(id int) (*BlogEntryWithName, error) {
+	query := `
+		SELECT blog.*, players.name as writer_name
+		FROM blog
+		JOIN players
+		ON blog.writer_id = players.id
+		WHERE blog.id = ?;
+	`
+
+	blog := BlogEntryWithName{}
+
+	DB.Get(&blog, query, id)
+
+	if blog.ID == 0 {
+		return nil, fmt.Errorf("blogpost met id %d niet gevonden", id)
+	}
+
+	fmt.Println(blog)
+
+	return &blog, nil
+}
+
+func GetBlogEntries() ([]BlogEntry, error) {
+	blogs := make([]BlogEntry, 0)
+
+	err := DB.Select(&blogs, "SELECT * FROM blog")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return blogs, nil
+}
+
+func GetLast3BlogEntries() ([]BlogEntry, error) {
+	blogs := make([]BlogEntry, 0)
+
+	err := DB.Select(&blogs, "SELECT * FROM blog ORDER BY created_at DESC LIMIT 3")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return blogs, nil
+}
+
+func GetPlayers() ([]Player, error) {
+	players := []Player{}
+
+	err := DB.Select(&players, "SELECT * FROM players")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return players, nil
 }
 
 type Player struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-	IsPirate bool `json:"is_pirate"`
+	ID   int    `db:"id"`
+	Name string `db:"name"`
+	IsPirate bool `db:"is_pirate"`
 }
 
 type Bakken struct {
@@ -172,6 +243,16 @@ type BlogEntry struct {
 	CreatedAt string `db:"created_at"`
 	Title string `db:"title"`
 	Content string `db:"content"`
-	Image string `db:"image"`
+	Image sql.NullString `db:"image"`
 	WriterID int `db:"writer_id"`
+}
+
+type BlogEntryWithName struct {
+	ID int `db:"id"`
+	CreatedAt string `db:"created_at"`
+	Title string `db:"title"`
+	Content string `db:"content"`
+	Image sql.NullString `db:"image"`
+	WritedID int `db:"writer_id"`
+	WriterName string `db:"writer_name"`
 }

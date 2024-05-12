@@ -1,0 +1,9 @@
+<main class="blog-entry">
+  <div class="header">
+    <h1>{{ .Blog.Title }}</h1>
+    <p>door: {{ .Blog.WriterName }}</p>
+    <hr />
+  </div>
+
+  <div class="content">{{ .Blog.Content | markdown }}</div>
+</main>

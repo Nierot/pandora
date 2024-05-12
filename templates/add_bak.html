@@ -1,0 +1,19 @@
+<main>
+  <h1>Bak toevoegen</h1>
+  <hr />
+
+  <form>
+    <label for="player">Speler</label>
+    <select id="player" name="player" required>
+      <option value="">Kies een speler</option>
+      {{ range .Players }}
+      <option value="{{ .ID }}">{{ .Name }}</option>
+      {{ end }}
+    </select>
+
+    <label for="reason">Reden</label>
+    <input type="text" id="reason" name="reason" required />
+
+    <button type="submit">Toevoegen</button>
+  </form>
+</main>

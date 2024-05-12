@@ -1,13 +1,41 @@
 <main>
   <div class="card">
-    <h2>Blog</h2>
+    <h2>Welkom!</h2>
 
-    {{ .Blog }}
+    Invictus gaat de komende week mooi
+    <span class="strike">bier drinken</span> puzzelen!
+    Op deze website gaan we een blog bijhouden over hoe dit gaat.
+  </div>
+
+  <div class="card">
+    <h2>Blog: {{ .Blog.Title }}</h2>
+
+    <div class="content">
+      Geschreven door:
+      {{ .Blog.WriterName }}
+    </div>
 
     <br />
 
-    <a href="/blog">Lees meer...</a>
+    <a href="/blog/{{ .Blog.ID }}">Lees meer...</a>
   </div>
+
+  <div class="card">
+    <h2>Vorige blog posts...</h2>
+
+    <div class="content">
+      {{ range .BlogList }}
+      <div class="blog-row">
+        <a href="/blog/{{ .ID }}">{{ .Title }}</a>
+      </div>
+      {{ end }}
+    </div>
+
+    <br />
+
+    <a href="/blog">Alle blogposts</a>
+  </div>
+
 
   <div class="card">
     <h2>Bakken scoreboard</h2>

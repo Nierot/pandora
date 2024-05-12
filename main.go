@@ -2,16 +2,36 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
 	"github.com/nierot/pandora/models"
 	"github.com/nierot/pandora/routes"
 	"github.com/spf13/viper"
+
+	"github.com/gomarkdown/markdown"
+	mdHtml "github.com/gomarkdown/markdown/html"
+	"github.com/gomarkdown/markdown/parser"
 )
 
 func main() {
 	engine := html.New("./templates", ".html")
+	engine.AddFunc("markdown", func(s string) template.HTML {
+
+		extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
+		p := parser.NewWithExtensions(extensions)
+		doc := p.Parse([]byte(s))
+		
+		htmlFlags := mdHtml.CommonFlags | mdHtml.HrefTargetBlank
+		opts := mdHtml.RendererOptions{Flags: htmlFlags}
+		renderer := mdHtml.NewRenderer(opts)
+		
+		
+		md := markdown.Render(doc, renderer)
+
+		return template.HTML(md)
+	})
 
 	app := fiber.New(fiber.Config{
 		CaseSensitive: false,

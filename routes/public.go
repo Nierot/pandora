@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/nierot/pandora/models"
 )
@@ -9,7 +11,17 @@ func InitPublic(app *fiber.App) {
 	app.Get("/", func(c *fiber.Ctx) error {
 		bakken, err := models.GetAmountOfBakkenPerPlayer()
 
-		blog := models.GetLatestBlogEntry()
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		blog, err := models.GetLatestBlogEntry()
+
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		blogList, err := models.GetLast3BlogEntries()
 
 		if err != nil {
 			return c.Status(500).SendString(err.Error())
@@ -18,6 +30,7 @@ func InitPublic(app *fiber.App) {
 		return c.Render("index", fiber.Map{
 			"Bakken": bakken,
 			"Blog": &blog,
+			"BlogList": blogList,
 		}, "layouts/base")
 	})
 
@@ -30,6 +43,39 @@ func InitPublic(app *fiber.App) {
 
 		return c.Render("bakken", fiber.Map{
 			"Bakken": bakken,
+		}, "layouts/base")
+	})
+
+	app.Get("/blog", func (c *fiber.Ctx) error {
+		blogs, err := models.GetBlogEntries()
+
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		return c.Render("blog_index", fiber.Map{
+			"Blogs": blogs,
+		}, "layouts/base")
+	})
+
+
+	app.Get("/blog/:id", func (c *fiber.Ctx) error {
+		id := c.Params("id")
+
+		nid, err := strconv.Atoi(id)
+
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		blog, err := models.GetBlogEntry(nid)
+
+		if err != nil {
+			return c.Status(500).SendString(err.Error())
+		}
+
+		return c.Render("blog", fiber.Map{
+			"Blog": blog,
 		}, "layouts/base")
 	})
 }

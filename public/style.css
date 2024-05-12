@@ -80,10 +80,14 @@ a {
 	text-align: center;
 }
 
+.strike {
+	text-decoration: line-through;
+}
+
 .ice {
 	position: fixed;
-	bottom: -44px;
-	left: -44px;
+	bottom: -40px;
+	left: -40px;
 	transform: rotate(44deg);
 }
 
@@ -92,4 +96,30 @@ a {
 	left: 0px !important;
 
 	transition: 0.5s linear;
+}
+
+.blog-entry > .header h1 {
+	margin-bottom: 0;
+}
+
+.blog-entry > .header p {
+	margin-top: 0.1rem;
+}
+
+.blog-entry > .content {
+	margin-top: 1rem;
+}
+
+.blog-entry > .content img {
+	max-width: 100%;
+}
+
+form {
+	display: grid;
+	grid-template-columns: 1fr 4fr;
+	gap: 1rem;
+}
+
+form > button {
+	grid-column: span 2;
 }
