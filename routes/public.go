@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -53,8 +52,6 @@ func InitPublic(app *fiber.App) {
 		if err != nil {
 			return c.Status(500).SendString(err.Error())
 		}
-
-		fmt.Println(blogs)
 
 		return c.Render("blog_index", fiber.Map{
 			"Blogs": blogs,

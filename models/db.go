@@ -162,8 +162,6 @@ func GetLatestBlogEntry() (*BlogEntryWithName, error) {
 		return nil, err
 	}
 
-	fmt.Println(blog)
-
 	return &blog, nil
 }
 
@@ -184,8 +182,6 @@ func GetBlogEntry(id int) (*BlogEntryWithName, error) {
 		return nil, fmt.Errorf("blogpost met id %d niet gevonden", id)
 	}
 
-	fmt.Println(blog)
-
 	return &blog, nil
 }
 
@@ -194,7 +190,8 @@ func GetBlogEntries() ([]BlogEntryWithName, error) {
 		SELECT blog.*, players.name as writer_name
 		FROM blog
 		JOIN players
-		ON blog.writer_id = players.id;
+		ON blog.writer_id = players.id
+		ORDER BY created_at DESC;
 	`
 	blogs := make([]BlogEntryWithName, 0)
 
@@ -229,6 +226,12 @@ func GetPlayers() ([]Player, error) {
 	}
 
 	return players, nil
+}
+
+func AddBak(pid int, reason string) error {
+	_, err := DB.Exec("INSERT INTO bakken (player_id, reason) VALUES (?, ?)", pid, reason)
+
+	return err
 }
 
 type Player struct {

@@ -1,7 +1,8 @@
 <main class="blog-entry">
   <div class="header">
     <h1>{{ .Blog.Title }}</h1>
-    <p>door: {{ .Blog.WriterName }}</p>
+    <span>door {{ .Blog.WriterName }}</span>
+    <span>op {{ .Blog.CreatedAt }}</span>
     <hr />
   </div>
 

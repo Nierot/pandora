@@ -20,6 +20,10 @@ body {
 	}
 }
 
+hr {
+	color: white;
+}
+
 header {
 	max-height: 10vh;
 	width: 100vw;
@@ -104,11 +108,11 @@ a {
 	transition: 0.5s linear;
 }
 
-.blog-entry > .header h1 {
+.header h1 {
 	margin-bottom: 0;
 }
 
-.blog-entry > .header p {
+.header p {
 	margin-top: 0.1rem;
 }
 
