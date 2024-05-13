@@ -10,4 +10,4 @@ COPY . .
 
 RUN GOOS=linux CGO_ENABLED=0 go build -o main
 
-CMD ["/app/main"]
+CMD ["/app/main", "--config-source=file", "--config-path=/etc/pandora/settings.yaml"]

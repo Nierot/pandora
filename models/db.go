@@ -46,11 +46,9 @@ func InitDB() {
 		panic("DATABASE_URL is not set")
 	}
 
-	db, err := sqlx.Connect("mysql", connString)
+	fmt.Println("database url: ", connString)
 
-	if err != nil {
-		panic(err)
-	}
+	db := sqlx.MustConnect("mysql", connString)
 
 	db.MustExec(playerSchema)
 	db.MustExec(bakkenSchema)
