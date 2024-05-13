@@ -47,6 +47,7 @@ header {
 
 main {
 	margin: 1rem;
+	margin-bottom: 10rem;
 }
 
 a {
@@ -118,6 +119,7 @@ a {
 
 .blog-entry > .content {
 	margin-top: 1rem;
+	margin-bottom: 10rem;
 }
 
 .blog-entry > .content img {

@@ -55,14 +55,10 @@ func config() {
 	viper.SetConfigName("settings")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("/etc/pandora/")
+	viper.AddConfigPath(".")
 	viper.AutomaticEnv()
 
 	err := viper.ReadInConfig()
-
-	// viper.SetDefault("AUTH_USERNAME", "admin")
-	// viper.SetDefault("AUTH_PASSWORD", "123456")
-	// viper.SetDefault("DATABASE_URL", "root:@tcp(localhost:3306)/pandora")
-	// viper.SafeWriteConfig()
 
 	test := viper.GetString("DATABASE_URL")
 
