@@ -55,6 +55,7 @@ func config() {
 	viper.SetConfigName("settings")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("/etc/pandora/")
 	viper.AutomaticEnv()
 
 	viper.SetDefault("AUTH_USERNAME", "admin")
