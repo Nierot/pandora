@@ -189,10 +189,16 @@ func GetBlogEntry(id int) (*BlogEntryWithName, error) {
 	return &blog, nil
 }
 
-func GetBlogEntries() ([]BlogEntry, error) {
-	blogs := make([]BlogEntry, 0)
+func GetBlogEntries() ([]BlogEntryWithName, error) {
+	query := `
+		SELECT blog.*, players.name as writer_name
+		FROM blog
+		JOIN players
+		ON blog.writer_id = players.id;
+	`
+	blogs := make([]BlogEntryWithName, 0)
 
-	err := DB.Select(&blogs, "SELECT * FROM blog")
+	err := DB.Select(&blogs, query)
 
 	if err != nil {
 		return nil, err

@@ -1,6 +1,9 @@
 # pandora
+
 slechte pandora site voor bakken
 
+## dev
+
 ```
-wgo run .
+air
 ```

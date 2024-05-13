@@ -1,3 +1,14 @@
 <main>
-  Blog entry
+  <h1>Alle blogs</h1>
+  <hr />
+
+  <ul>
+    {{ range .Blogs }}
+    <li>
+      <a href="/blog/{{ .ID }}">{{ .Title }}</a>
+      (door: {{ .WriterName }})
+    </li>
+    {{ end }}
+  </ul>
+
 </main>

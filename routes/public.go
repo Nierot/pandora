@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -53,6 +54,8 @@ func InitPublic(app *fiber.App) {
 			return c.Status(500).SendString(err.Error())
 		}
 
+		fmt.Println(blogs)
+
 		return c.Render("blog_index", fiber.Map{
 			"Blogs": blogs,
 		}, "layouts/base")
@@ -74,8 +77,29 @@ func InitPublic(app *fiber.App) {
 			return c.Status(500).SendString(err.Error())
 		}
 
+		previous := blog.ID - 1
+
+		if previous < 1 {
+			previous = 1
+		}
+
+		nextBlog, _ := models.GetBlogEntry(blog.ID + 1)
+
+		next := 0
+		hasNext := false
+
+		if nextBlog == nil {
+			next = 0
+		} else {
+			hasNext = true
+			next = nextBlog.ID
+		}
+
 		return c.Render("blog", fiber.Map{
 			"Blog": blog,
+			"Previous": previous,
+			"Next": next,
+			"HasNext": hasNext,
 		}, "layouts/base")
 	})
 }

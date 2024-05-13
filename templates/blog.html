@@ -6,4 +6,13 @@
   </div>
 
   <div class="content">{{ .Blog.Content | markdown }}</div>
+
+  <nav>
+    <a href="/blog/{{ .Previous }}">Vorige blog</a>
+    <a href="/blog">Terug naar overzicht</a>
+
+    {{ if .HasNext }}
+    <a href="/blog/{{ .Next }}">Volgende blog</a>
+    {{ end }}
+  </nav>
 </main>
