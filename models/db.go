@@ -149,6 +149,7 @@ func GetLatestBlogEntry() (*BlogEntryWithName, error) {
 		FROM blog
 		JOIN players
 		ON blog.writer_id = players.id
+		ORDER BY created_at DESC
 		LIMIT 1;
 	`
 	
@@ -228,6 +229,28 @@ func GetPlayers() ([]Player, error) {
 
 func AddBak(pid int, reason string) error {
 	_, err := DB.Exec("INSERT INTO bakken (player_id, reason) VALUES (?, ?)", pid, reason)
+
+	return err
+}
+
+func AddBlog(pid int, title string, content string) (int, error) {
+	res, err := DB.Exec("INSERT INTO blog (writer_id, title, content) VALUES (?, ?, ?)", pid, title, content)
+
+	if err != nil {
+		return 0, err
+	}
+
+	idx, err := res.LastInsertId()
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(idx), nil
+}
+
+func EditBlog(id int, pid int, title string, content string) error {
+	_, err := DB.Exec("UPDATE blog SET writer_id = ?, title = ?, content = ? WHERE id = ?", pid, title, content, id)
 
 	return err
 }

@@ -1,0 +1,25 @@
+<main>
+  <div class="header">
+    <h1>Blog toevoegen</h1>
+    <a href="/blog">Terug naar overzicht</a>
+    <hr />
+  </div>
+
+  <form method="POST">
+    <label for="player">Schrijver</label>
+    <select id="player" name="player" required>
+      <option value="">Kies een schrijver</option>
+      {{ range .Players }}
+      <option value="{{ .ID }}">{{ .Name }}</option>
+      {{ end }}
+    </select>
+
+    <label for="title">Titel</label>
+    <input type="text" id="title" name="title" required />
+
+    <label for="content">Inhoud</label>
+    <textarea id="content" name="content" required></textarea>
+
+    <button type="submit">Toevoegen</button>
+  </form>
+</main>

@@ -8,6 +8,8 @@
 
   <div class="content">{{ .Blog.Content | markdown }}</div>
 
+  <a href="/nieuwe-blog?edit=true&id={{ .Blog.ID }}">Bewerken</a>
+
   <nav>
     <a href="/blog/{{ .Previous }}">Vorige blog</a>
     <a href="/blog">Terug naar overzicht</a>
